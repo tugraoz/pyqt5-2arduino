@@ -10,70 +10,68 @@ class MyWindow(QWidget):
 class ArduinoController(QMainWindow):
     def __init__(self):
         super().__init__()
+# First Arduino Buttons
+        self.stepper_motor_clock_side_button = QPushButton('Rotate Stepper Motor Clockwise', self)
+        self.stepper_motor_clock_side_button.move(20, 50)
+        self.stepper_motor_clock_side_button.clicked.connect(self.stepper_motor_clock_side)
 
-        # Birinci Arduino Butonları
-        self.stepper_motor_saat_yonu_buton = QPushButton('Stepper Motoru Saat Yönünde Döndür', self)
-        self.stepper_motor_saat_yonu_buton.move(20, 50)
-        self.stepper_motor_saat_yonu_buton.clicked.connect(self.stepper_motor_saat_yonu)
+        self.stepper_motor_reverse_side_button = QPushButton('Rotate Stepper Motor in Reverse Direction', self)
+        self.stepper_motor_reverse_side_button.move(220, 50)
+        self.stepper_motor_reverse_side_button.clicked.connect(self.stepper_motor_reverse_direction)
+# Second Arduino Buttons
+        self.stepper_motor_clock_side_button = QPushButton('Rotate Stepper Motor Clockwise (Arduino 2)', self)
+        self.stepper_motor_clock_side_button.move(20, 150)
+        self.stepper_motor_clock_side_button2.clicked.connect(self.stepper_motor_clock_side_2)
 
-        self.stepper_motor_ters_yonu_buton = QPushButton('Stepper Motoru Ters Yönde Döndür', self)
-        self.stepper_motor_ters_yonu_buton.move(220, 50)
-        self.stepper_motor_ters_yonu_buton.clicked.connect(self.stepper_motor_ters_yonu)
+        self.stepper_motor_reverse_side_button2 = QPushButton('Rotate Stepper Motor in Reverse Direction (Arduino 2)', self)
+        self.stepper_motor_reverse_side_button2.move(220, 150)
+        self.stepper_motor_reverse_side_button2.clicked.connect(self.stepper_motor_reverse_side2)
 
-        # İkinci Arduino Butonları
-        self.stepper_motor_saat_yonu_buton_2 = QPushButton('Stepper Motoru Saat Yönünde Döndür (Arduino 2)', self)
-        self.stepper_motor_saat_yonu_buton_2.move(20, 150)
-        self.stepper_motor_saat_yonu_buton_2.clicked.connect(self.stepper_motor_saat_yonu_2)
+       # Input Number of Returns
+        self.returns_count_label = QLabel('Dönüş Sayısı:', self)
+        self.returns_count_label.move(20, 250)
+        self.returns_count = QLineEdit(self)
+        self.returns_count.move(120, 250)
 
-        self.stepper_motor_ters_yonu_buton_2 = QPushButton('Stepper Motoru Ters Yönde Döndür (Arduino 2)', self)
-        self.stepper_motor_ters_yonu_buton_2.move(220, 150)
-        self.stepper_motor_ters_yonu_buton_2.clicked.connect(self.stepper_motor_ters_yonu_2)
-
-        # Dönüş Sayısı Girişi
-        self.donus_sayisi_label = QLabel('Dönüş Sayısı:', self)
-        self.donus_sayisi_label.move(20, 250)
-        self.donus_sayisi_girisi = QLineEdit(self)
-        self.donus_sayisi_girisi.move(120, 250)
-
-        # Arduino Bağlantısı
+# Arduino Connection
         self.serial_port = serial.Serial('COM3', 9600)
-        self.serial_port_2 = serial.Serial('COM4', 9600) # İkinci Arduino'nun bağlantı noktası
+        self.serial_port_2 = serial.Serial('COM4', 9600) # Port of the second Arduino
         self.setWindowTitle('Arduino Control Program')
         self.setGeometry(100, 100, 400, 400)
         self.show()
 
     @pyqtSlot()
-    def stepper_motor_saat_yonu(self):
-        donus_sayisi = self.donus_sayisi_girisi.text()
-        if donus_sayisi:
-             donus_sayisi = int(donus_sayisi)
-             for i in range(donus_sayisi):
-                  self.serial_port.write(b'1')
+    def stepper_motor_clock_side(self):
+        returns_count = self.returns_count_entry.text()
+        if returns_count:
+             return_count = int(returns_count)
+             for i in range(returns_count):
+                self.serial_port_2.write(b'1')
     @pyqtSlot()
-    def stepper_motor_ters_yonu(self):
-        donus_sayisi = self.donus_sayisi_girisi.text()
-        if donus_sayisi:
-             donus_sayisi = int(donus_sayisi)
-             for i in range(donus_sayisi):
-                  self.serial_port.write(b'2')
+    def stepper_motor_reverse_side_(self):
+        returns_count = self.returns_count_entry.text()
+        if returns_count:
+             return_count = int(returns_count)
+             for i in range(returns_count):
+                self.serial_port_2.write(b'2')
  
-    def stepper_motor_saat_yonu_2(self):
-                donus_sayisi = self.donus_sayisi_girisi.text()
-                if donus_sayisi:
-                     donus_sayisi = int(donus_sayisi)
-                     for i in range(donus_sayisi):
-                          self.serial_port_2.write(b'3')
+    def stepper_motor_clock_side_2(self):
+        returns_count = self.returns_count_entry.text()
+        if returns_count:
+             return_count = int(returns_count)
+             for i in range(returns_count):
+                self.serial_port_2.write(b'3')
 
-    def stepper_motor_ters_yonu_2(self):
-        donus_sayisi = self.donus_sayisi_girisi.text()
-        if donus_sayisi:
-             donus_sayisi = int(donus_sayisi)
-             for i in range(donus_sayisi):
+    def stepper_motor_reverse_side2(self):
+        returns_count = self.returns_count_entry.text()
+        if returns_count:
+             return_count = int(returns_count)
+             for i in range(returns_count):
                 self.serial_port_2.write(b'4')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = ArduinoController()
-    ex.stepper_motor_saat_yonu_2()
-    ex.stepper_motor_ters_yonu_2()
+    ex.stepper_motor_clock_side_2()
+    ex.stepper_motor_reverse_side2()
     sys.exit(app.exec_())
